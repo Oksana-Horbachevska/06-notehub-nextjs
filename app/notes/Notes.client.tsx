@@ -9,11 +9,12 @@ import Modal from "@/components/Modal/Modal";
 import NoteList from "@/components/NoteList/NoteList";
 import { useRouter } from "next/navigation";
 import { fetchNotes } from "@/lib/api";
+import type { Note } from "@/types/note";
 import css from "./page.module.css";
 
 interface NotesClientProps {
   initialData: {
-    notes: any[];
+    notes: Note[];
     totalPages: number;
   };
   initialQuery: string;
