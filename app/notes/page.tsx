@@ -5,10 +5,7 @@ import { fetchNotes } from "@/lib/api";
 export default async function Notes({
   searchParams,
 }: {
-  searchParams?: {
-    query?: string;
-    page?: string;
-  };
+  searchParams?: { [key: string]: string | undefined };
 }) {
   const query = searchParams?.query || "";
   const currentPage = Number(searchParams?.page) || 1;
