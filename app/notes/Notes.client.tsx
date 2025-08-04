@@ -11,11 +11,25 @@ import { useRouter } from "next/navigation";
 import { fetchNotes } from "@/lib/api";
 import css from "./page.module.css";
 
-export default function NotesClient() {
+interface NotesClientProps {
+  initialData: {
+    notes: any[];
+    totalPages: number;
+  };
+  initialQuery: string;
+  initialPage: number;
+}
+
+export default function NotesClient({
+  initialData,
+  initialQuery,
+  initialPage,
+}: NotesClientProps) {
   const router = useRouter();
 
-  const [currentPage, setCurrentPage] = useState(1);
-  const [query, setQuery] = useState("");
+  const [currentPage, setCurrentPage] = useState(initialPage);
+  const [query, setQuery] = useState(initialQuery);
+
   const updateSearchQuery = useDebouncedCallback((newQuery: string) => {
     setQuery(newQuery);
     setCurrentPage(1);
@@ -23,14 +37,13 @@ export default function NotesClient() {
   }, 300);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
-
   const openModal = () => setIsModalOpen(true);
-
   const closeModal = () => setIsModalOpen(false);
 
-  const { data, isSuccess } = useQuery({
+  const { data, isSuccess, isLoading, isError } = useQuery({
     queryKey: ["notes", query, currentPage],
     queryFn: () => fetchNotes(query, currentPage),
+    initialData,
     placeholderData: keepPreviousData,
   });
 
@@ -59,6 +72,8 @@ export default function NotesClient() {
           <NoteForm onCloseModal={closeModal} />
         </Modal>
       )}
+      {isLoading && <p>Loading...</p>}
+      {isError && <p>Error loading notes</p>}
       {isSuccess && data.notes.length > 0 && <NoteList notes={data.notes} />}
       {isSuccess && data.notes.length === 0 && (
         <p className={css.empty}>No notes found</p>

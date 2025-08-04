@@ -1,5 +1,5 @@
 import NotesClient from "./Notes.client";
-import { QueryClient, dehydrate } from "@tanstack/react-query";
+
 import { fetchNotes } from "@/lib/api";
 
 export default async function Notes({
@@ -13,18 +13,18 @@ export default async function Notes({
   const query = searchParams?.query || "";
   const currentPage = Number(searchParams?.page) || 1;
 
-  // 1. Створення нового екземпляра QueryClient для цього запиту
-  const queryClient = new QueryClient();
+  const { notes, totalPages } = await fetchNotes(query, currentPage);
 
-  // 2. Попередня вибірка даних (prefetch) на сервері
-  // Результат зберігається в кеші queryClient
-  await queryClient.prefetchQuery({
-    queryKey: ["notes", query, currentPage],
-    queryFn: () => fetchNotes(query, currentPage),
-  });
+  const initialData = {
+    notes: notes,
+    totalPages: totalPages,
+  };
 
-  // 3. Отримання стану кеша для передачі на клієнт
-  const dehydratedState = dehydrate(queryClient);
-
-  return <NotesClient dehydratedState={dehydratedState} />;
+  return (
+    <NotesClient
+      initialData={initialData}
+      initialQuery={query}
+      initialPage={currentPage}
+    />
+  );
 }

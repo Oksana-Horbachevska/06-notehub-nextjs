@@ -23,15 +23,13 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-  dehydratedState,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-  dehydratedState: any;
-}>) {
+}) {
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
-        <TanStackProvider dehydratedState={dehydratedState}>
+        <TanStackProvider>
           <Header />
           <main>{children}</main>
           <Footer />
