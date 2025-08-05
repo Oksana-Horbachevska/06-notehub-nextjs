@@ -21,20 +21,20 @@ const initialValues: NoteFormValues = {
 
 const NoteFormSchema = Yup.object().shape({
   title: Yup.string()
-    .min(3, "Name must be at least 2 characters")
+    .min(3, "Title must be at least 3 characters")
     .max(50, "Title is too long")
     .required("Title is required"),
-  content: Yup.string().max(500, "Title is too long"),
+  content: Yup.string().max(500, "Content is too long"),
   tag: Yup.string()
     .oneOf(["Todo", "Work", "Personal", "Meeting", "Shopping"])
-    .required("Title is required"),
+    .required("Tag is required"),
 });
 
 interface NoteFormProps {
-  onCloseModal: () => void;
+  onClose: () => void;
 }
 
-export default function NoteForm({ onCloseModal }: NoteFormProps) {
+export default function NoteForm({ onClose }: NoteFormProps) {
   const queryClient = useQueryClient();
   const mutation = useMutation({
     mutationFn: (noteData: NewNoteData) => createNote(noteData),
@@ -42,7 +42,7 @@ export default function NoteForm({ onCloseModal }: NoteFormProps) {
       queryClient.invalidateQueries({
         queryKey: ["notes"],
       });
-      onCloseModal();
+      onClose();
     },
   });
 
@@ -107,11 +107,7 @@ export default function NoteForm({ onCloseModal }: NoteFormProps) {
         </div>
 
         <div className={css.actions}>
-          <button
-            type="button"
-            onClick={onCloseModal}
-            className={css.cancelButton}
-          >
+          <button type="button" onClick={onClose} className={css.cancelButton}>
             Cancel
           </button>
           <button type="submit" className={css.submitButton} disabled={false}>

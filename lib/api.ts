@@ -6,8 +6,8 @@ axios.defaults.baseURL = "https://notehub-public.goit.study/api";
 
 interface NoteResponse {
   notes: Note[];
-  page: number;
-  perPage: number;
+  page?: number;
+  perPage?: number;
   totalPages: number;
 }
 
@@ -29,7 +29,6 @@ export async function fetchNotes(
   };
 
   const response = await axios.get<NoteResponse>("/notes", options);
-  console.log(response.data);
 
   return response.data;
 }
