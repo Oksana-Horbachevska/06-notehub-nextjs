@@ -70,7 +70,7 @@ export default function NotesClient({
       </header>
       {isModalOpen && (
         <Modal onClose={closeModal}>
-          <NoteForm onCloseModal={closeModal} />
+          <NoteForm onClose={closeModal} />
         </Modal>
       )}
       {isLoading && <p>Loading...</p>}
